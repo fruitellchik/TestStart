@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation (
+            "com.codeborne:selenide:6.19.1",
+            "org.junit.jupiter:junit-jupiter:5.9.3",
+            "org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.register('web', Test) {//эта таска нужна, чтобы по тегу "web" можно было запускать тесты только по вебу
+    useJUnitPlatform {
+        includeTags 'web'
+    }
+    systemProperty 'platform', 'web'
+}
+
+tasks.register('android', Test) {//запуск тестов только по тегу андроид. В самом тесте, перед классом нужно написать "@Tag("android")"
+    useJUnitPlatform {                      //пример: @Tag("android")
+        includeTags 'android'
+    }
+    systemProperty 'platform', 'android'
+}
+
+tasks.register('ios', Test) {//запуск тестов только по тегу иос
+    useJUnitPlatform {
+        includeTags 'ios'
+    }
+    systemProperty 'platform', 'ios'
+}
+
+help {
+    doFirst {
+        println ""
+        println "************************************************************************ "
+        println "***                                                                  *** "
+        println "*** Welcome to                                                       *** "
+        println "*** https://github.com/autotests-cloud/selenide-junit5-allure-gradle *** "
+        println "***                                                                  *** "
+        println "***                                                                  *** "
+        println "*** You can run tests by one of the following commands:              *** "
+        println "*** ./gradlew web                                                    *** "
+        println "*** ./gradlew android                                                *** "
+        println "*** ./gradlew ios                                                    *** "
+        println "***                                                                  *** "
+        println "************************************************************************ "
+        println ""
+    }
+}
